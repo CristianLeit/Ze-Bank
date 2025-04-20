@@ -1,0 +1,215 @@
+<html lang="PT-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Antique+B1&display=swap" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <title>Zé Bank</title>
+</head>
+<body>
+
+    <!-- Barra de navegação -->
+    <nav>
+        <div class="nav-left">
+            <h1 href="index.html">Zé Bank</h1> <!-- editar isso -->
+        </div>
+        <div class="nav-center">
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="https://servicos.receita.fazenda.gov.br/servicos/cpf/consultasituacao/consultapublica.asp">Serviços!</a></li>
+                <li><a href="#">Sobre</a></li>
+                <li><a href="#">Contato</a></li>
+            </ul>
+        </div>
+        <div class="nav-right">
+            <button class="dark-theme" onclick="toggleDarkTheme()">
+                <i class="fa fa-moon-o"></i>
+              </button>
+            <button class="login-btn" onclick="openLoginModal()">Login</button>
+            <button class="button-list" onclick="toggleNav()">
+                    <i class="fa fa-lg fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Fundo escuro e caixa de login -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeLoginModal()">&times;</span>
+            <h2>Login</h2>
+            <form id="loginForm">
+                <input type="text" placeholder="Usuário" id="email" required>
+                <input type="password" placeholder="Senha" id="senha" required>
+                <a href="#">Esqueceu a senha?</a>
+                <button class="submit-btn">Entrar</button>
+            </form>
+        </div>
+    </div>
+
+        <div class="nav-sidebar">
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="#">Serviços</a></li>
+                <li><a href="#">Sobre</a></li>
+                <li><a href="#">Contato</a></li>
+            </ul>
+        </div>
+    </nav>
+    <section id="conteudo">
+        <!-- bar stock market -->
+        <div id="ticker-bar">
+            <div class="ticker-content"></div>
+        </div>
+
+
+        <!-- Contêiner para gráfico e informações -->
+        <div class="chart-and-slider-container">
+            <form id="addLoanForm">
+                <div class="modal-content">
+                    <h2>Emprestimos</h2>
+                    <input name="valor"      placeholder="valor" type="number" required>
+                    <input name="taxa"       placeholder="taxa %" type="number" required>
+                    <select name="modalidade">
+                        
+                        <option value="nubank">Nubank 4,95%</option>
+                        <option value="nubank">PicPay</option>
+                        <option value="nubank">MercadoPago</option>
+                    </select>
+                    <input name="parcelas"   placeholder="parcelas em meses" type="number" required>
+                </div>
+              </form>
+            
+              <table>
+                <tbody id="clientsTable"></tbody>
+              </table>
+              
+              
+              <table>
+                <tbody id="loansTable"></tbody>
+              </table>
+            <!-- Área de Informações de Mercado e Seletor -->
+            <div class="text-info">
+            <div id="stock-info"></div>
+            <div id="stock-valor"></div>
+            </div>
+            
+            <!-- Área do gráfico -->
+            <div class="chart-container">
+            <canvas id="lineChart"></canvas>
+            </div>
+
+            <div class="range-selector">
+                <label for="rangeSelect">Faixa:</label>
+                <select id="rangeSelect" onchange="onRangeChange()">
+                <option value="1d">1d</option>
+                <option value="5d">5d</option>
+                <option value="1mo" selected>1mo</option>
+                <option value="3mo">3mo</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Slider -->
+        <div class="slider">
+            <a href="fin.html">
+            <div class="slides">
+                <div class="slide">
+                    <img src="img\reuniao-1.jpg"alt="Seguindo tendências de mercado da melhor maneira.">
+                </div>
+                <div class="slide">
+                    <img src="img\pequeno-negocio-1.jpg" alt="A melhor forma de começar o seu negócio.">
+                </div>
+                <div class="slide">
+                    <img src="img\trabalhar-fora-1.jpg" alt="Ajudando você a descobrir novos horizontes.">
+                </div>
+            </div>
+            </a>
+        </div>
+        <!-- Container de Notícias -->
+        <section class="noticias">
+            <h2>Notícias do Mercado</h2>
+            <div id="news-container" class="news-container">
+            <!-- Os itens de notícias serão inseridos via JavaScript -->
+            </div>
+            <!-- Botão "Ver mais notícias" -->
+            <div class="ver-mais" wm-nav="noticias.html">
+            Ver mais notícias
+            </div>
+        </section>
+        <!-- Seção de opções de empréstimos -->
+        <section class="emprestimos">
+            <h2>Opções de Empréstimos</h2>
+            <div class="emprestimos-slider">
+                <button class="scroll-arrow left" onclick="moveLeft()">
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <div class="emprestimos-container">
+                <!-- seus elementos .box aqui -->
+                <div class="box"> 💰 Crédito Business 
+                    <p>Uma solução segura para você obter crédito para sua empresa de forma rápida.</p>
+                </div>
+                <div class="box"> 🏠 Financiamento Imobiliário 
+                    <p>É uma linha de crédito oferecida para ajudar você na compra do seu imóvel.</p>
+                </div>
+                <div class="box"> 🚗 Crédito para Veículos 
+                    <p>A melhor forma de financiar o seu veículo, novos ou usados, importado ou nacional.</p>
+                </div>
+                <div class="box"> 💳 Crédito Consignado 
+                    <p>Coloque as contas em dia e fuja dos juros altos com o empréstimo consignado.</p>
+                </div>
+                </div>
+                <button class="scroll-arrow right" onclick="moveRight()">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
+            </div>
+            
+                <!-- ... seus elementos .box ... -->
+            
+        </section>
+
+
+        <!-- Cadastro de e-mail -->
+        <section class="cadastro-email">
+            <h2>Cadastre-se para receber novidades</h2>
+            <input type="email" placeholder="Digite seu e-mail">
+            <button>Cadastrar</button>
+        </section>
+    </section>
+    <!-- Rodapé com informações bancárias -->
+    <footer>
+        <div class="info">
+            <h3>Transparência</h3>
+            <p> Política de privacidade</p>
+            <p >Política de segurança </p>
+            <p> Contratos</p>
+            <p> Relatórios financeiros </p>
+            <p> Ética e compliance </p>
+            <p> Dados abertos</p>
+            <p> SCR </p>
+            <p> Convenção de boletos </p>
+            <p> PLD/CFTP </p>
+            <p> Cessão de Créditos (Desenrola)</p>
+        </div>
+
+        <div class="info">
+            <h3>Fale com a gente</h3>
+            <p><strong>Capitais e Regiões metropolitanas:</strong> 4000 0000</p>
+            <p><strong>Demais localidades:</strong> 0800 000 0000</p>
+            <p><strong>Email:</strong> meajuda@zebank.com.br</p>
+            <p>Atendimento 24h</p>
+        </div>
+
+        <div class="info">
+            <h3>Ouvidoria</h3>
+            <p><strong>Telefone:</strong> 0800 000 0000</p>
+            <p>Atendimento em dias úteis das 8h às 18h</p>
+            <p><strong>Email:</strong> ouvidoria@Febre500.com.br</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

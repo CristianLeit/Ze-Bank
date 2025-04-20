@@ -1,0 +1,81 @@
+<html lang="PT-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Antique+B1&display=swap" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <title></title>
+</head>
+<body>
+    <nav>
+        <div class="nav-left">
+            <h1>Zambia Bank</a></h1>
+        </div>
+        <div class="nav-center">
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="https://servicos.receita.fazenda.gov.br/servicos/cpf/consultasituacao/consultapublica.asp">Serviços!</a></li>
+                <li><a href="#">Sobre</a></li>
+                <li><a href="#">Contato</a></li>
+            </ul>
+        </div>
+        <div class="nav-right">
+            <button class="dark-theme" onclick="toggleDarkTheme()">
+                <i class="fa fa-moon-o"></i>
+              </button>
+        </div>
+    </nav>
+<!-- Seção de Clientes -->
+  <section id="clienteSection">
+    <form id="addClientForm">
+        <div class="modal-content">
+            <input name="nome" placeholder="nome"      required>
+            <input name="rg"    placeholder="rg"      required>
+            <input name="cpf"    placeholder="cpf"    required>
+            <input name="consulta"    placeholder="receita"    required 
+            href="https://servicos.receita.fazenda.gov.br/servicos/cpf/consultasituacao/consultapublica.asp">
+            
+            <select name="Situação Cadastral no CPF">
+              <option value="REGULAR">REGULAR</option>
+              <option value="SUSPENSO">SUSPENSO</option>
+              <option value="PENDENTE">PENDENTE</option>
+              <option value="CANCELADO">CANCELADO</option>
+              <option value="NULO">NULO</option>
+            </select>
+            <button type="submit">Adicionar DOC</button>
+            <input name="telefone"  placeholder="telefone" required>
+            <input name="email"   placeholder="email"   required>
+        <button type="submit">Adicionar Cliente</button>
+    </div>
+      </form>
+      <table>
+        <tbody id="clientsTable"></tbody>
+      </table>
+      
+      <form id="addLoanForm">
+        <div class="modal-content">
+            <input name="clienteCpf" placeholder="CPF" required>
+            <input name="valor"      placeholder="valor" type="number" required>
+            <input name="taxa"       placeholder="taxa %" type="number" required>
+            <select name="modalidade">
+              <option value="Fixo">Fixo</option>
+              <option value="Simples">Simples</option>
+              <option value="Composto">Composto</option>
+            </select>
+            <input name="parcelas"   placeholder="parcelas em meses" type="number" required>
+            <button type="submit">Adicionar Empréstimo</button>
+        </div>
+      </form>
+      <table>
+        <tbody id="loansTable"></tbody>
+      </table>
+  </section>
+
+  <script scr="js/script.js"></script>
+</body>
+</html>
+</body>

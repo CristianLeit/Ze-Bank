@@ -1,0 +1,564 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Shippori Antique B1', sans-serif;
+}
+
+body {
+  text-align: center;
+  display: inline-block;
+  width: 100%;
+}
+
+/* Barra de navegação */
+nav {
+  background: #002244;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 3px 5px 10px;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.nav-center ul {
+  list-style: none;
+  display: flex;
+}
+
+.nav-center ul li {
+  margin: 0 15px;
+}
+
+.nav-center ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+.nav-right .login-btn {
+  background: #ffcc00;
+  border: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-right: 8px;
+}
+.login-btn:hover{
+  background: rgb(255, 251, 0);
+}
+
+/* Fundo escuro ao abrir o modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* Escurece o fundo */
+  justify-content: center;
+  align-items: center;
+}
+
+/* Caixa de login */
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  width: 300px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+/* Botão de fechar (X) */
+.close-btn {
+  color: #002244;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Inputs e botão de login */
+.modal-content input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.modal-content h2, 
+.modal-content a{
+  color: #002244;
+  margin: 10px;
+  text-decoration: none;
+  text-align: left;
+  float: left;
+}
+
+.modal-content a{
+  font-size: small;
+  margin-top: 0;
+}
+
+
+.submit-btn {
+  background: #002244;
+  color: white;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.submit-btn:hover {
+  background: #003366;
+}
+
+.button-list, .dark-theme{
+  background: #ffffff00;
+  border: none;
+  padding: 5px;
+  font-size: 25px;
+  cursor: pointer;
+  z-index: 999;
+  position: relative;
+  margin: 0px 10px;
+}
+
+
+
+.nav-sidebar {
+  position: fixed;
+  top: 0;
+  right: -100%; 
+  width: 250px;
+  height: 100%;
+  background: #002244;
+  padding-top: 60px;
+  transition: transform 0.4s ease-in-out;
+  transform: translateX(100%);
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
+  z-index: 998;
+}
+
+/* Exibir a barra lateral quando ativada */
+.nav-sidebar.active {
+  transform: translateX(0%);
+  right: 0;
+}
+
+
+
+/* Links da barra lateral */
+.nav-sidebar ul {
+  list-style: none;
+  padding: 0;
+  text-align: center;
+}
+
+.nav-sidebar ul li {
+  margin: 20px 0;
+}
+
+.nav-sidebar ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+.nav-sidebar ul li a:hover {
+  text-decoration: underline;
+}
+
+
+.nav-sidebar li {
+  padding: 10px 5px;
+  text-align: end;
+  list-style-type: none;
+}
+
+.nav-sidebar li:hover{
+  background: #003163;
+}
+.nav-sidebar a {
+  text-decoration: none;
+  color: #FFF;
+}
+
+
+ 
+/* bar stock market */
+
+ #ticker-bar {
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+  background: #003163;
+  color: white;
+  padding: 10px;
+  position: relative;
+  width: 100%;
+}
+
+.ticker-content {
+  display: flex;
+  animation: ticker-scroll 300s linear infinite;
+}
+
+.ticker-item {
+  display: flex;
+  align-items: center;
+  margin-right: 30px;
+}
+
+#ticker-bar:hover .ticker-content {
+  animation-play-state: paused;
+}
+
+/* Animação da rolagem */
+@keyframes ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+
+
+/* Contêiner para gráfico e slider*/
+.chart-and-slider-container {
+  width: 45%;
+  margin: 2%;
+  float: left;
+}
+
+/* Contêiner para as informações de mercado (texto) */
+.text-info {
+  display: flex;
+  min-width: 300px;
+  text-align: left; /* Alinha o texto à esquerda */
+}
+
+/* Contêiner para o gráfico */
+.chart-container {
+  margin: 3%;
+  flex: 1;
+  width: auto;
+  text-align: center; /* Opcional: centraliza o canvas dentro do contêiner */
+  width: auto;
+  height: 300px;  /* Defina a altura desejada para o gráfico */
+  margin: 3% auto;
+}
+
+#stock-info{
+  width: 50%;
+}
+
+.stock-info svg{
+  width:55;
+  height:50;
+  float: left;
+  margin-top: 1%;
+}
+
+#stock-valor{
+  float: right;
+  width: 45%;
+  margin: 2%;
+}
+
+.stock-valor > p {
+  text-align: end;
+}
+
+
+#lineChart {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  box-sizing: border-box;
+}
+
+.range-selector{
+  display: inline-block;
+}
+
+
+/* Para telas pequenas, empilha os elementos */
+@media screen and (max-width: 768px) {
+  .chart-and-slider-container {
+    flex-direction: column;
+  }
+}
+
+/* Slider */
+
+.slider {
+  flex: 1;
+  width: 
+  45%;
+  float:right;
+  margin: 3%;
+  overflow: hidden;
+  background-position: center;
+  background-size: cover;
+  border-radius: 10px;
+  /*z-index: 1;*/
+}
+
+.slides {
+  display: flex;
+  width: 100%;
+  height: auto;
+}
+
+.slide {
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.slide img {
+  width: 100%;
+  height: auto;
+  object-fit: initial;
+}
+
+
+/*noticias*/
+
+.noticias {
+  margin: 20px auto;
+  width: 100%;
+  height: auto;
+  text-align: left;
+  display: inline-block;
+}
+
+.news-container {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 20px;
+  justify-content: center;
+  overflow: scroll;
+}
+
+/* Card individual de notícia */
+.news-item {
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 300px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.news-item:hover {
+  transform: scale(1.02);
+}
+
+/* Imagem da notícia */
+.news-item img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+/* Conteúdo textual */
+.news-content {
+  padding: 15px;
+}
+
+.news-content h3 {
+  font-size: 18px;
+  margin: 0 0 10px;
+  color: #002244;
+}
+
+.news-content p {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.4;
+}
+
+/* Botão "Ver mais notícias" */
+.ver-mais {
+  margin: 20px auto;
+  padding: 20px;
+  width: 300px;
+  text-align: center;
+  background: #002244;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.ver-mais:hover {
+  background: #003366;
+}
+
+
+
+/* Opções de empréstimos */
+
+.emprestimos, .cadastro-email {
+  margin: 3% 1%;
+  display: inline-block;
+  width: 98%;
+}
+
+/* Container que envolve a área de empréstimos e as setas */
+.emprestimos-slider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 3% 1%;
+}
+
+.emprestimos-container {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none; /* Firefox */
+}
+.emprestimos-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Estilização das setas de scroll */
+.scroll-arrow {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  transition: opacity 0.3s;
+  z-index: 10;
+  /* Espaço extra para separar das bordas do container */
+  padding: 0 10px;
+}
+
+.scroll-arrow.left {
+  /* Posicionamento à esquerda, se preferir fixo use position:absolute e ajuste top/left */
+  margin-right: 5px;
+}
+.scroll-arrow.right {
+  margin-left: 5px;
+}
+
+/* Opacidade reduzida quando desabilitado */
+.scroll-arrow.disabled {
+  opacity: 0.5;
+}
+
+
+.box {
+  background: #002244;
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  font-size: 18px;
+  width: 300px;
+  text-align: left;
+  margin: 0.2%;
+}
+.box > p{
+  font-size:medium;
+  color: #ffffff;
+  margin: 6% 0%;
+  height: 100px;
+  width: 270px;
+  border-radius: 8px;
+  padding: 5%;
+}
+
+/* Cadastro de e-mail */
+
+
+.cadastro-email input {
+  margin-top: 2%;
+  padding: 10px;
+  font-size: 16px;
+  width: 250px;
+  margin-right: 10px;
+}
+
+.cadastro-email button {
+  padding: 10px;
+  font-size: 16px;
+  background: #ffcc00;
+  border: none;
+  cursor: pointer;
+}
+
+/* Rodapé */
+footer {
+  background: #002244;
+  color: white;
+  padding: 30px;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+footer .info {
+  width: 300px;
+  text-align: left;
+  margin: 13px;
+}
+
+/* Exemplo de estilos para dark mode */
+.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+.dark-mode nav {
+  background: #1f1f1f;
+}
+
+.dark-mode footer {
+  background: #1f1f1f;
+}
+.dark-theme{
+  background-color: transparent;
+}
+
+
+@media screen and (max-width: 660px){
+  .nav-center{
+   display: none;
+  }
+  .slider {
+    width: 90%;
+    
+ }
+ .chart-and-slider-container,.slider{
+  width: 90%;
+  float: none;
+    display: inline-block;
+ }
+} 
+ @media screen and (min-width: 660px){
+   .button-list{
+     display: none;
+   }
+
+ }

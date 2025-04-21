@@ -452,12 +452,8 @@ function moveRight() {
           const title = document.createElement("h3");
           title.textContent = item.headline;
           
-          const summary = document.createElement("p");
-          summary.textContent = item.summary;
-          
           // Anexa os elementos
           textDiv.appendChild(title);
-          textDiv.appendChild(summary);
           
           newsDiv.appendChild(img);
           newsDiv.appendChild(textDiv);

@@ -96,7 +96,15 @@ nav {
   border-radius: 5px;
 }
 
+
+#result {
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+
 .modal-content h2, 
+.modal-content label,
 .modal-content a{
   color: #002244;
   margin: 10px;

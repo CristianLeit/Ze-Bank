@@ -78,7 +78,37 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 
 
 
+document.addEventListener('DOMContentLoaded', () => {
+  const principalInput = document.getElementById('principal');
+  const installmentsInput = document.getElementById('installments');
+  const resultDiv = document.getElementById('result');
 
+  // Função de cálculo em tempo real
+  function calcularParcela() {
+    const principal = parseFloat(principalInput.value);
+    const installments = parseInt(installmentsInput.value, 10);
+    const interestRate = 0.05; // 5% fixo ao mês
+
+    // Validações básicas
+    if (isNaN(principal) || principal <= 0 || isNaN(installments) || installments <= 0) {
+      resultDiv.textContent = '';
+      return;
+    }
+
+    // Juros simples: M = (P * (1 + i * n)) / n
+    const monthlyPayment = (principal * (1 + interestRate * installments)) / installments;
+
+    // Mostrar apenas o valor da parcela
+    resultDiv.innerHTML = `Valor da Parcela: R$ ${monthlyPayment.toFixed(2)}`;
+  }
+
+  // Atualiza toda vez que o usuário digita
+  principalInput.addEventListener('input', calcularParcela);
+  installmentsInput.addEventListener('input', calcularParcela);
+
+  // Cálculo inicial caso haja valores padrão
+  calcularParcela();
+});
 
 
 
@@ -124,6 +154,7 @@ function initLoanCalculator() {
   // Chama o cálculo logo ao carregar para exibir resultados iniciais
   calcularEmprestimo();
 }
+
 function calcularEmprestimo() {
   // Captura os inputs e aplica trim
   const principalStr = document.getElementById("principal").value.trim();
@@ -155,10 +186,9 @@ function calcularEmprestimo() {
   if (interestType === "composta") {
     monthlyPayment = (principal * interestRate * Math.pow(1 + interestRate, months)) /
                      (Math.pow(1 + interestRate, months) - 1);
-  } else {
-    monthlyPayment = (principal * (1 + interestRate * months)) / months;
+  }else {
+    monthlyPayment = (principal * (1 + 0.05 * months)) / months;
   }
-
   const totalAmount = monthlyPayment * months;
   document.getElementById("result").innerHTML = `
     Número de Parcelas: ${months}<br>

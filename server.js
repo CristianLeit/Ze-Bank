@@ -6,6 +6,7 @@ const path = require('path');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -28,6 +29,27 @@ const UserSchema = new mongoose.Schema({
   senha: String
 }, { collection: 'usuarios' });
 
+// Proxy para ocultar o token e buscar notícias
+app.get('/api/news', async (req, res) => {
+  try {
+    const finnhubUrl = `https://finnhub.io/api/v1/news?category=general&token=${process.env.FINNHUB_TOKEN}`;
+    const finResp = await fetch(finnhubUrl);
+    if (!finResp.ok) {
+      return res.status(finResp.status).json({ error: 'Erro na Finnhub' });
+    }
+    const newsArray = await finResp.json();
+    return res.json(newsArray);
+  } catch (err) {
+    console.error('Erro ao buscar notícias:', err);
+    return res.status(500).json({ error: 'Erro interno ao obter notícias' });
+  }
+});
+
+// **IMPORTANTE**: deixe esse handler DEPOIS de todas as rotas,
+// para não “engolir” requisições válidas:
+app.use((req, res) => {
+  res.status(404).json({ error: 'Endpoint não encontrado' });
+});
 // Temporariamente desativado porque bcrypt não está sendo usado
 /* UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();

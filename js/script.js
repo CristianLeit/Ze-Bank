@@ -416,60 +416,66 @@ function moveRight() {
   });
   
 
-  function loadNews() {
-    const apiURL = "https://finnhub.io/api/v1/news?category=general&token=cumagt1r01qsaphv5uogcumagt1r01qsaphv5up0";
-    
-    fetch(apiURL)
-      .then(response => response.json())
-      .then(newsArray => {
-        const newsContainer = document.getElementById("news-container");
-        newsContainer.innerHTML = ""; // Limpa qualquer conteúdo anterior
-        
-        // Seleciona as 6 primeiras notícias
-        const newsItems = newsArray.slice(0, 6);
-        
-        newsItems.forEach(item => {
-          // Cria um elemento para a notícia
-          const newsDiv = document.createElement("div");
-          newsDiv.classList.add("news-item");
-          
-          // Quando clicado, redireciona para a versão traduzida da notícia
-          newsDiv.onclick = function() {
-            // Exemplo: usa o Google Translate (de auto para pt)
-            const translateURL = "https://translate.google.com/translate?hl=pt&sl=auto&tl=pt&u=" + encodeURIComponent(item.url);
-            window.open(translateURL, "_blank");
-          };
-          
-          // Cria a imagem (se existir)
-          const img = document.createElement("img");
-          img.src = item.image || "placeholder.jpg"; // Use uma imagem padrão se não houver
-          img.alt = item.headline;
-          
-          // Cria o container de texto (título e sumário)
-          const textDiv = document.createElement("div");
-          textDiv.classList.add("news-content");
-          
-          const title = document.createElement("h3");
-          title.textContent = item.headline;
-          
-          // Anexa os elementos
-          textDiv.appendChild(title);
-          
-          newsDiv.appendChild(img);
-          newsDiv.appendChild(textDiv);
-          
-          newsContainer.appendChild(newsDiv);
-        });
-        
-        // (Opcional) Se desejar, insira alguma lógica para mostrar "Ver mais notícias" ou já está presente no HTML.
-      })
-      .catch(error => {
-        console.error("Erro ao carregar notícias:", error);
-      });
+  async function loadNews() {
+    try {
+      // 1) Busca do seu servidor, que já esconde o token
+      const res = await fetch('/api/news');
+      const data = await res.json();
+      
+      // 2) Normaliza para array  
+      // se já for Array, ok;  
+      // senão, tenta extrair de algum campo comum, ou vira vazio
+      let newsArray = [];
+      if (Array.isArray(data)) {
+        newsArray = data;
+      } else if (Array.isArray(data.news)) {
+        newsArray = data.news;
+      } else if (Array.isArray(data.articles)) {
+        newsArray = data.articles;
+      } else {
+        console.warn('Resposta de /api/news não era array:', data);
+      }
+  
+      // 3) Pega as 6 primeiras
+      const newsItems = newsArray.slice(0, 6);
+  
+      // 4) Renderiza
+      const container = document.getElementById('news-container');
+      container.innerHTML = '';
+      for (let item of newsItems) {
+        // traduz a manchete
+        const q = encodeURIComponent(item.headline);
+        const gtUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=pt&dt=t&q=${q}`;
+        const tResp = await fetch(gtUrl);
+        const tJson = await tResp.json();
+        const tituloPT = (tJson[0] && tJson[0][0] && tJson[0][0][0]) || item.headline;
+  
+        const div = document.createElement('div');
+        div.classList.add('news-item');
+        div.onclick = () => {
+          const u = encodeURIComponent(item.url);
+          window.open(`https://translate.google.com/translate?hl=pt&sl=auto&tl=pt&u=${u}`, '_blank');
+        };
+        const img = document.createElement('img');
+        img.src = item.image || 'placeholder.jpg';
+        img.alt = tituloPT;
+        const h3 = document.createElement('h3');
+        h3.textContent = tituloPT;
+        div.append(img, h3);
+        container.append(div);
+      }
+    } catch (err) {
+      console.error('Erro ao carregar notícias:', err);
+    }
   }
   
-  // Chama a função para carregar as notícias ao iniciar
-  loadNews();
+  // chama ao iniciar
+  document.addEventListener('DOMContentLoaded', loadNews);
+
+
+
+
+
   
   document.querySelectorAll('[wm-nav]').forEach(link => {
     const conteudo = document.getElementById('conteudo')

@@ -102,7 +102,7 @@ nav {
   font-weight: bold;
 }
 
-
+#addloanForm h2,
 .modal-content h2, 
 .modal-content label,
 .modal-content a{
@@ -243,18 +243,33 @@ nav {
     transform: translateX(-100%);
   }
 }
-
-#addLoanForm{
-  width: 37%;
-  margin: 2%;
-  float: left;
+#loanCalculator{
+  margin: 5%;
 }
+#addLoanForm{
+  width: 47%;
+  margin: 2%;
+  float: right;
+  text-align: start;
+}
+
+#addLoanForm label,
+#addLoanForm h2, 
+#addLoanForm input, 
+#addLoanForm select, 
+#addLoanForm button {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+
 
 /* Contêiner para gráfico e slider*/
 .chart-and-slider-container {
   width: 45%;
   margin: 2%;
-  float: right;
+  float:inline-start;
 }
 
 /* Contêiner para as informações de mercado (texto) */
@@ -313,6 +328,13 @@ nav {
 @media screen and (max-width: 768px) {
   .chart-and-slider-container {
     flex-direction: column;
+    width: 100%;
+    margin: 0;
+  }
+  #addLoanForm{
+    width: 100%;
+    margin: 1%;
+    float: center;
   }
 }
 
@@ -321,7 +343,7 @@ nav {
 .slider {
   flex: 1;
   width: 
-  45%;
+  100%;
   float:right;
   margin: 3%;
   overflow: hidden;
@@ -563,7 +585,7 @@ footer .info {
     
  }
  .chart-and-slider-container,.slider{
-  width: 90%;
+  width: 100%;
   float: none;
     display: inline-block;
  }

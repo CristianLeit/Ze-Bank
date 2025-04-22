@@ -138,9 +138,15 @@
         <!-- Container de Notícias -->
         <section class="noticias">
             <h2>Notícias do Mercado</h2>
-            <div id="news-container" class="news-container">
-            <!-- Os itens de notícias serão inseridos via JavaScript -->
-            </div>
+            <button class="scroll-arrow left" onclick="moveLeft()">
+                <i class="fa fa-chevron-left"></i>
+            </button>
+                <div id="news-container" class="news-container">
+                <!-- Os itens de notícias serão inseridos via JavaScript -->
+                </div>
+            <button class="scroll-arrow right" onclick="moveRight()">
+                    <i class="fa fa-chevron-right"></i>
+            </button>
             <!-- Botão "Ver mais notícias" -->
             <div class="ver-mais" wm-nav="noticias.html">
             Ver mais notícias

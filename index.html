@@ -43,7 +43,7 @@
             <span class="close-btn" onclick="closeLoginModal()">&times;</span>
             <h2>Login</h2>
             <form id="loginForm">
-                <input type="text" placeholder="Usuário" id="email" required>
+                <input type="email" placeholder="Usuário" id="email" required>
                 <input type="password" placeholder="Senha" id="senha" required>
                 <a href="#">Esqueceu a senha?</a>
                 <button class="submit-btn">Entrar</button>
@@ -67,6 +67,22 @@
         </div>
 
         <form id="addLoanForm">
+            <!-- Slider -->
+            <div class="slider">
+                <a href="fin.html">
+                <div class="slides">
+                    <div class="slide">
+                        <img src="img\reuniao-1.jpg"alt="Seguindo tendências de mercado da melhor maneira.">
+                    </div>
+                    <div class="slide">
+                        <img src="img\pequeno-negocio-1.jpg" alt="A melhor forma de começar o seu negócio.">
+                    </div>
+                    <div class="slide">
+                        <img src="img\trabalhar-fora-1.jpg" alt="Ajudando você a descobrir novos horizontes.">
+                    </div>
+                </div>
+                </a>
+            </div>
             <section id="loanCalculator">
                 <h2>Cálculo de Empréstimo</h2>
                 <form id="loanForm">
@@ -77,26 +93,12 @@
             
                   <label for="installments">Número de Parcelas:</label>
                   <input type="number" id="installments" min="1" step="1" required placeholder="exemplo: 12">
+                  
                 </form>
                 <div id="result"></div>
               
         
-                <!-- Slider -->
-                <div class="slider">
-                    <a href="fin.html">
-                    <div class="slides">
-                        <div class="slide">
-                            <img src="img\reuniao-1.jpg"alt="Seguindo tendências de mercado da melhor maneira.">
-                        </div>
-                        <div class="slide">
-                            <img src="img\pequeno-negocio-1.jpg" alt="A melhor forma de começar o seu negócio.">
-                        </div>
-                        <div class="slide">
-                            <img src="img\trabalhar-fora-1.jpg" alt="Ajudando você a descobrir novos horizontes.">
-                        </div>
-                    </div>
-                    </a>
-                </div>
+                
             </section>
         </form>
 

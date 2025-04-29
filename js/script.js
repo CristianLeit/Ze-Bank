@@ -99,7 +99,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const monthlyPayment = (principal * (1 + interestRate * installments)) / installments;
 
     // Mostrar apenas o valor da parcela
-    resultDiv.innerHTML = `Valor da Parcela: R$ ${monthlyPayment.toFixed(2)}`;
+    resultDiv.innerHTML = `Valor da Parcela: R$ ${monthlyPayment.toFixed(2)}
+    <button type="submit" class="submit-btn">Confirmar Emprestimo</button>`;
   }
 
   // Atualiza toda vez que o usuário digita

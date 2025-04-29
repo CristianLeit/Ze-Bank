@@ -247,8 +247,8 @@ nav {
   margin: 5%;
 }
 #addLoanForm{
+  height: 50%;
   width: 47%;
-  margin: 2%;
   float: right;
   text-align: start;
 }
@@ -328,29 +328,26 @@ nav {
 @media screen and (max-width: 768px) {
   .chart-and-slider-container {
     flex-direction: column;
-    width: 100%;
     margin: 0;
+    width: 100%;
   }
   #addLoanForm{
+    height: 70%;
     width: 100%;
-    margin: 1%;
-    float: center;
   }
 }
 
 /* Slider */
 
 .slider {
-  flex: 1;
-  width: 
-  100%;
-  float:right;
-  margin: 3%;
+  position: absolute;
+  width: 100%;
+  float: right;
   overflow: hidden;
   background-position: center;
   background-size: cover;
   border-radius: 10px;
-  /*z-index: 1;*/
+  z-index: -1;
 }
 
 .slides {

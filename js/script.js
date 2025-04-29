@@ -54,6 +54,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 
   const email = document.getElementById('email').value;
   const senha = document.getElementById('senha').value;
+  const conteudo = document.getElementById('conteudo');
 
   try {
       const response = await fetch('/api/login', {
@@ -66,7 +67,15 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 
       if (response.ok) {
           localStorage.setItem('token', data.token); // Guarda o token
-          window.location.href = '/cliente.html'; // Redireciona para página cliente
+                    // Redireciona via AJAX para carregar cliente.html
+                    fetch('/cliente.html') // Faz a requisição da página dinamicamente
+                    .then(resp => resp.text())
+                    .then(html => {
+                        conteudo.innerHTML = html; // Insere o conteúdo na div
+                        console.log('Cliente carregado com sucesso!');
+                        closeLoginModal();
+                    })
+                    .catch(err => console.error('Erro ao carregar cliente.html:', err));
       } else {
           alert(data.error); // Exibe erro se login falhar
       }

@@ -45,11 +45,7 @@ app.get('/api/news', async (req, res) => {
   }
 });
 
-// **IMPORTANTE**: deixe esse handler DEPOIS de todas as rotas,
-// para não “engolir” requisições válidas:
-app.use((req, res) => {
-  res.status(404).json({ error: 'Endpoint não encontrado' });
-});
+
 // Temporariamente desativado porque bcrypt não está sendo usado
 /* UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();

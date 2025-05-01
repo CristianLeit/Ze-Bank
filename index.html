@@ -24,14 +24,14 @@
                 <li><a href="index.html">Início</a></li>
                 <li>Serviços
                     <ul>
-                        <li><a href="scr/components/NewsTicker.html">Noticias do Mercado</a></li>
-                        <li><a href="scr/pages/Investimentos.html">Investimentos</a></li>
-                        <ii><a href="scr/pages/Associados.html"></a> Associados</ii>
-                        <li><a href="scr/User/emprestimos.html"></a>Empréstimmos</li>
-                        <li><a href="scr/components/StockMarket.html">Mercado de Ações</a></li>
+                        <li id="link"><a href="scr/components/NewsTicker.html">Noticias do Mercado</a></li>
+                        <li id="link"><a href="scr/pages/Investimentos.html">Investimentos</a></li>
+                        <ii id="link"><a href="scr/pages/Associados.html"></a> Associados</ii>
+                        <li id="link"><a href="scr/User/emprestimos.html"></a>Empréstimmos</li>
+                        <li id="link"><a href="scr/components/StockMarket.html">Mercado de Ações</a></li>
                     </ul>
                 </li>
-                <li><a href="scr/pages/About.html">Sobre</a></li>
+                <li id="link"><a href="scr/pages/About.html">Sobre</a></li>
                 <li id="anchor"><a href="#">Contato</a></li>
             </ul>
         </div>
@@ -39,7 +39,7 @@
             <button class="dark-theme" onclick="toggleDarkTheme()">
                 <i class="fa fa-moon-o"></i>
               </button>
-            <button class="login-btn" onclick="openLoginModal()">Login</button>
+            <button id="loginBtn" class="login-btn" onclick="openLoginModal()" onclick="openLoginModal()">Login</button>
             <button class="button-list" onclick="toggleNav()">
                     <i class="fa fa-lg fa-bars"></i>
             </button>

@@ -66,17 +66,29 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
       const data = await response.json();
 
       if (response.ok) {
-          localStorage.setItem('token', data.token); // Guarda o token
-                    // Redireciona via AJAX para carregar cliente.html
-                    fetch('scr/User/cliente.html') // Faz a requisição da página dinamicamente
-                    .then(resp => resp.text())
-                    .then(html => {
-                        conteudo.innerHTML = html; // Insere o conteúdo na div
-                        console.log('Cliente carregado com sucesso!');
-                        closeLoginModal();
-                    })
-                    .catch(err => console.error('Erro ao carregar cliente.html:', err));
-      } else {
+          localStorage.setItem('token', data.token); 
+
+        // 1) Substitui o botão de login pelo ícone de usuário
+        const loginBtn = document.getElementById('loginBtn');
+        loginBtn.innerHTML = '<i class="fa fa-user-circle"></i>';
+        // Opcional: remover o handler de abrir modal
+        loginBtn.onclick = null;
+        // Opcional: adiciona um novo handler (ex.: abrir perfil)
+        loginBtn.addEventListener('click', () => {
+          // Aqui você abre o painel, por exemplo
+          openUserProfile();
+        });
+
+        // Redireciona via AJAX para carregar cliente.html
+        fetch('scr/User/cliente.html') // Faz a requisição da página dinamicamente
+          .then(resp => resp.text())
+          .then(html => {
+              conteudo.innerHTML = html; // Insere o conteúdo na div
+              console.log('Cliente carregado com sucesso!');
+              closeLoginModal();
+        })
+        .catch(err => console.error('Erro ao carregar cliente.html:', err));
+  } else {
           alert(data.error); // Exibe erro se login falhar
       }
   } catch (error) {
@@ -85,6 +97,33 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 });
 
 
+document.addEventListener('DOMContentLoaded', () => {
+  const btnContato = document.getElementById('anchor');
+  const secContato = document.getElementById('contato');
+  
+  btnContato.addEventListener('click', e => {
+    e.preventDefault();
+    // rola de forma suave até o topo da seção de contato
+    secContato.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  // 1) Checa se já está logado
+  const token = localStorage.getItem('token');
+  if (token) {
+    replaceLoginButton();
+  }
+
+  // 2) Configura o listener de login como antes
+  document.getElementById('loginForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    // ... seu código de login ...
+    if (response.ok) {
+      localStorage.setItem('token', data.token);
+      replaceLoginButton();
+      // carrega cliente.html etc.
+    }
+  });
+});
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -121,10 +160,19 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+function replaceLoginButton() {
+  const loginBtn = document.getElementById('loginBtn');
+  if (!loginBtn) return;
+  loginBtn.innerHTML = '<i class="fa fa-user-circle"></i>';
+  loginBtn.onclick = null;
+  // se quiser, redefina onclick ou adicione perfil:
+  loginBtn.addEventListener('click', () => {
+    // exibe menu de usuário ou perfil
+  });
+}
 
 
-//acesso a fintech
-document.querySelectorAll("li > a").forEach(link => {
+document.querySelectorAll("#link > a").forEach(link => {
   const conteudo = document.getElementById('conteudo')
   link.onclick = function(e) {
     e.preventDefault();
@@ -137,16 +185,8 @@ document.querySelectorAll("li > a").forEach(link => {
   }
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-  const btnContato = document.getElementById('anchor');
-  const secContato = document.getElementById('contato');
-  
-  btnContato.addEventListener('click', e => {
-    e.preventDefault();
-    // rola de forma suave até o topo da seção de contato
-    secContato.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
-});
+
+
 
 function initLoanCalculator() {
   // Define as datas padrão

@@ -137,7 +137,16 @@ document.querySelectorAll("li > a").forEach(link => {
   }
 });
 
-
+document.addEventListener('DOMContentLoaded', () => {
+  const btnContato = document.getElementById('anchor');
+  const secContato = document.getElementById('contato');
+  
+  btnContato.addEventListener('click', e => {
+    e.preventDefault();
+    // rola de forma suave até o topo da seção de contato
+    secContato.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
 
 function initLoanCalculator() {
   // Define as datas padrão

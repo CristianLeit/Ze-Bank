@@ -121,12 +121,12 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.get('/cliente.html', (req, res) => {
+app.get('scr/User/cliente.html', (req, res) => {
   const token = req.headers['x-auth-token']; 
   if (!token) {
       return res.status(401).send('Acesso negado. Faça login primeiro.');
   }
-  res.sendFile(path.join(__dirname, 'public', 'cliente.html'));
+  res.sendFile(path.join(__dirname, 'User', 'cliente.html'));
 });
 
 

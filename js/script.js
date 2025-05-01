@@ -68,7 +68,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
       if (response.ok) {
           localStorage.setItem('token', data.token); // Guarda o token
                     // Redireciona via AJAX para carregar cliente.html
-                    fetch('/cliente.html') // Faz a requisição da página dinamicamente
+                    fetch('scr/User/cliente.html') // Faz a requisição da página dinamicamente
                     .then(resp => resp.text())
                     .then(html => {
                         conteudo.innerHTML = html; // Insere o conteúdo na div
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 //acesso a fintech
-document.querySelectorAll(".slider > a").forEach(link => {
+document.querySelectorAll("li > a").forEach(link => {
   const conteudo = document.getElementById('conteudo')
   link.onclick = function(e) {
     e.preventDefault();
@@ -132,8 +132,6 @@ document.querySelectorAll(".slider > a").forEach(link => {
       .then(resp => resp.text())
       .then(html => {
         conteudo.innerHTML = html;
-        // Após carregar o conteúdo, inicialize a calculadora
-        initLoanCalculator();
       })
       .catch(err => console.error('Erro:', err));
   }

@@ -28,18 +28,42 @@ nav {
 .nav-center ul {
   list-style: none;
   display: flex;
+  position: relative;
 }
-
 .nav-center ul li {
+  position: relative;    /* necessário para posicionar o submenu */
   margin: 0 15px;
 }
-
-.nav-center ul li a {
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
+.nav-center ul li ul {
+  list-style: none;
+  display: none;         /* esconde por padrão */
+  position: absolute;    /* tira do fluxo para sobrepor */
+  top: 100%;             /* aparece logo abaixo do pai */
+  left: 0;
+  background: #003163;   /* mesmo fundo do menu */
+  padding: 10px 0;
+  border-radius: 4px;
+  min-width: 180px;
+  z-index: 10;
+}
+.nav-center ul li ul li {
+  margin: 0;
+  padding: 5px 20px;
+}
+.nav-center ul li ul li a {
+  color: #fff;
+  font-size: 16px;
 }
 
+/* 2) Exibe o submenu ao passar o mouse */
+.nav-center ul li:hover > ul {
+  display: block;
+}
+
+/* 3) Pequenos detalhes visuais */
+.nav-center ul li ul li:hover {
+  background: #0056b3;
+}
 .nav-right .login-btn {
   background: #ffcc00;
   border: none;

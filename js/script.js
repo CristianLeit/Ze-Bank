@@ -100,7 +100,8 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 document.addEventListener('DOMContentLoaded', () => {
   const btnContato = document.getElementById('anchor');
   const secContato = document.getElementById('contato');
-  
+  const logoutBtn = document.getElementById('logoutBtn');
+
   btnContato.addEventListener('click', e => {
     e.preventDefault();
     // rola de forma suave até o topo da seção de contato
@@ -111,6 +112,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('token');
   if (token) {
     replaceLoginButton();
+  } else {
+    // garante que logout fica oculto se não estiver logado
+    logoutBtn.style.display = 'none';
   }
 
   // 2) Configura o listener de login como antes
@@ -162,6 +166,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function replaceLoginButton() {
   const loginBtn = document.getElementById('loginBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+
   if (!loginBtn) return;
   loginBtn.innerHTML = '<i class="fa fa-user-circle"></i>';
   loginBtn.onclick = null;
@@ -169,8 +175,15 @@ function replaceLoginButton() {
   loginBtn.addEventListener('click', () => {
     // exibe menu de usuário ou perfil
   });
+
+  logoutBtn.style.display = 'inline-block';
+  logoutBtn.onclick     = logout;
 }
 
+function logout() {
+  localStorage.removeItem('token');   // 1) apaga o token
+  window.location.href = '/';         // 2) redireciona pro login
+}
 
 document.querySelectorAll("#link > a").forEach(link => {
   const conteudo = document.getElementById('conteudo')

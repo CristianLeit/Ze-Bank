@@ -84,8 +84,8 @@ app.post('/api/login', async (req, res) => {
       return res.status(400).json({ error: 'Usuário não encontrado' });
     }
 
-    console.log('✅ Usuário encontrado:', usuario);
-    console.log('Senha no banco:', usuario.senha); // Agora essa linha está no lugar certo
+    console.log('✅ Usuário encontrado:', usuario.nome);
+    console.log('🪪Tipo:', usuario.tipo); // Agora essa linha está no lugar certo
 
     // Verifica se a senha está correta
     const senhaCorreta = senha === usuario.senha;

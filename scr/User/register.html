@@ -1,0 +1,148 @@
+<html lang="PT-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Antique+B1&display=swap" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="../../css/styles.css">
+    <title>Zé Bank</title>
+</head>
+<body>
+
+    <!-- Barra de navegação -->
+    <nav>
+        <div class="nav-left">
+        <button onclick="window.location.href='../../index.html'">
+            <h1>Zé Bank</h1> 
+        </button>
+        </div>
+        <div class="nav-center">
+            <ul>
+                <li><a href="../../index.html">Início</a></li>
+                <li>Serviços
+                    <ul>
+                        <li id="link"><a href="scr/components/NewsTicker.html">Noticias do Mercado</a></li>
+                        <li id="link"><a href="scr/pages/Investimentos.html">Investimentos</a></li>
+                        <ii id="link"><a href="scr/pages/Associados.html"></a> Associados</ii>
+                        <li id="link"><a href="scr/User/emprestimos.html"></a>Empréstimmos</li>
+                        <li id="link"><a href="scr/components/StockMarket.html">Mercado de Ações</a></li>
+                    </ul>
+                </li>
+                <li id="link"><a href="scr/pages/About.html">Sobre</a></li>
+                <li id="anchor"><a href="#">Contato</a></li>
+            </ul>
+        </div>
+        <div class="nav-right">
+            <button class="dark-theme" onclick="toggleDarkTheme()">
+                <i class="fa fa-moon-o"></i>
+              </button>
+            <button id="loginBtn" class="login-btn" onclick="openLoginModal()" onclick="openLoginModal()">Login</button>
+            <button class="button-list" onclick="toggleNav()">
+                    <i class="fa fa-lg fa-bars"></i>
+            </button>
+            <button id="logoutBtn" class="dark-theme" style="display:none">
+                <i class="fa fa-sign-out"></i>
+              </button>
+        </div>
+
+        <!-- Fundo escuro e caixa de login -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeLoginModal()">&times;</span>
+            <h2>Login</h2>
+            <form id="loginForm">
+                <input type="email" placeholder="Usuário" id="email" required>
+                <input type="password" placeholder="Senha" id="senha" required>
+                <a href="#">Esqueceu a senha?</a>
+                <label id="link"><a href="/scr/User/register.html">cadastre-se</a></label>
+                <button class="submit-btn">Entrar</button>
+            </form>
+
+        </div>
+    </div>
+
+        <div class="nav-sidebar">
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li>Serviços
+                    <ul>
+                        <li><a href="scr/components/NewsTicker.html">Noticias do Mercado</a></li>
+                        <li><a href="scr/pages/Investimentos.html">Investimentos</a></li>
+                        <ii><a href="scr/pages/Associados.html"></a> Associados</ii>
+                        <li><a href="scr/User/emprestimos.html"></a>Empréstimmos</li>
+                        <li><a href="scr/components/StockMarket.html">Mercado de Ações</a></li>
+                    </ul>
+                </li>
+                <li><a href="scr/pages/About.html">Sobre</a></li>
+                <li id="anchor"><a href="#">Contato</a></li>
+            </ul>
+        </div>
+    </nav>
+    <!-- bar stock market -->
+    <div id="ticker-bar">
+        <div class="ticker-content"></div>
+    </div>
+<section id="registerSection" class="noticias">
+    <h2>Cadastro de Usuário</h2>
+    <form id="registerForm">
+        <div class="modal-content">
+      <label for="first_name">Nome:</label>
+      <input type="text" id="first_name" name="first_name" required>
+  
+      <label for="last_name">Sobrenome:</label>
+      <input type="text" id="last_name" name="last_name" required>
+
+
+  
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+  
+      <label for="password">Senha:</label>
+      <input type="password" id="password" name="password" required>
+  
+      <label for="phone">Telefone:</label>
+      <input type="number" id="phone" name="phone" required>
+  
+      <button type="submit" class="register">Registrar</button>
+    </div>
+    </form>
+  </section>
+  <!-- Rodapé com informações bancárias -->
+  <section id="contato">
+    <footer>
+        <div class="info">
+            <h3>Transparência</h3>
+            <p> Política de privacidade</p>
+            <p >Política de segurança </p>
+            <p> Contratos</p>
+            <p> Relatórios financeiros </p>
+            <p> Ética e compliance </p>
+            <p> Dados abertos</p>
+            <p> SCR </p>
+            <p> Convenção de boletos </p>
+            <p> PLD/CFTP </p>
+            <p> Cessão de Créditos (Desenrola)</p>
+        </div>
+
+        <div class="info">
+            <h3>Fale com a gente</h3>
+            <p><strong>Capitais e Regiões metropolitanas:</strong> 4000 0000</p>
+            <p><strong>Demais localidades:</strong> 0800 000 0000</p>
+            <p><strong>Email:</strong> meajuda@zebank.com.br</p>
+            <p>Atendimento 24h</p>
+        </div>
+
+        <div class="info">
+            <h3>Ouvidoria</h3>
+            <p><strong>Telefone:</strong> 0800 000 0000</p>
+            <p>Atendimento em dias úteis das 8h às 18h</p>
+            <p><strong>Email:</strong> ouvidoria@Febre500.com.br</p>
+        </div>
+    </footer>
+</section>
+<script src="../../js/script.js"></script>
+</body>
+</html>

@@ -3,8 +3,10 @@ console.log('JWT_SECRET:', process.env.JWT_SECRET);
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const authMiddleware = require('./middleware/auth');
+const Usuario = require('./models/User')
+const bcrypt = require('bcryptjs');
 
 
 const app = express();
@@ -21,13 +23,6 @@ mongoose
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
-// Definição do modelo de Usuário
-const UserSchema = new mongoose.Schema({
-  tipo: String,
-  nome: String,
-  email: String,
-  senha: String
-}, { collection: 'usuarios' });
 
 // Proxy para ocultar o token e buscar notícias
 app.get('/api/news', async (req, res) => {
@@ -46,49 +41,71 @@ app.get('/api/news', async (req, res) => {
 });
 
 
-// Temporariamente desativado porque bcrypt não está sendo usado
-/* UserSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
-  this.password = await bcrypt.hash(this.password, 10);
-  next();
-});
- */
-const User = mongoose.model('usuarios', UserSchema);
 
-// Middleware de autenticação JWT
-function authMiddleware(req, res, next) {
-  const token = req.header('x-auth-token');
-  if (!token) return res.status(401).json({ error: 'Acesso negado: token não fornecido' });
+// Rota de cadastro de usuário
+app.post('/api/register', async (req, res) => {
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch (err) {
-    return res.status(400).json({ error: 'Token inválido' });
+    const { first_name, last_name, email, password, phone } = req.body;
+
+    // Verifica se o email já existe
+    const usuarioExistente = await Usuario.findOne({ email });
+    if (usuarioExistente) {
+      return res.status(400).json({ error: 'Email já cadastrado!' });
+    }
+
+    // Gera hash para a senha
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Cria novo usuário
+    const novoUsuario = new Usuario({
+      name: { first_name, last_name },
+      email,
+      password: hashedPassword,
+      phone,
+      created_at: new Date(),
+      updated_at: new Date()
+    });
+
+    // Salva no banco
+    await novoUsuario.save();
+
+    res.status(201).json({ message: 'Usuário cadastrado com sucesso!' });
+
+  } catch (error) {
+    console.error('Erro ao registrar usuário:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
   }
-}
+});
+
+
+
+
+
+
+
+
 
 // Rota de login (autenticação)
 app.post('/api/login', async (req, res) => {
-  const { email, senha } = req.body;
+  const { email, password } = req.body;
   
   console.log('Email recebido:', email);
-  console.log('Senha recebida:', senha);
+  console.log('Senha recebida:', password);
 
   try {
     // Busca o usuário pelo email
-    const usuario = await User.findOne({ email });
+    const user = await Usuario.findOne({ email });
 
-    if (!usuario) {
+    if (!user) {
       console.log('❌ Usuário não encontrado no banco');
       return res.status(400).json({ error: 'Usuário não encontrado' });
     }
 
-    console.log('✅ Usuário encontrado:', usuario.nome);
-    console.log('🪪Tipo:', usuario.tipo); // Agora essa linha está no lugar certo
+    console.log('✅ Usuário encontrado:', user.name);
+    console.log('🪪Tipo:', user.role); // Agora essa linha está no lugar certo
 
-    // Verifica se a senha está correta
-    const senhaCorreta = senha === usuario.senha;
+    const senhaCorreta = await user.comparePassword(password);
     if (!senhaCorreta) {
       console.log('❌ Senha incorreta!');
       return res.status(400).json({ error: 'Senha inválida' });
@@ -96,12 +113,11 @@ app.post('/api/login', async (req, res) => {
 
     console.log('🔑 Login bem-sucedido! Gerando token...');
     const token = jwt.sign(
-      { id: usuario._id, tipo: usuario.tipo, email: usuario.email },
+      { id: user._id, role: user.role, email: user.email },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
-
-    res.json({ token });
+      res.json({ token });
 
   } catch (error) {
     console.error('🔥 Erro no login:', error);
@@ -109,9 +125,21 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+app.get('/api/profile', authMiddleware, async (req, res) => {
+  try {
+    // req.user.id foi setado pelo authMiddleware via JWT
+    const usuario = await Usuario.findById(req.usuario.id).select('-senha -__v');
+    if (!usuario) return res.status(404).json({ error: 'Usuário não encontrado' });
+    res.json(usuario);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erro interno ao obter perfil' });
+  }
+});
+
 // Exemplo de rota protegida para manipular clientes
 app.get('/api/clientes', authMiddleware, async (req, res) => {
-  const Cliente = mongoose.model('Cliente'); // supondo modelo já definido
+  const Cliente = mongoose.model('clientes'); // supondo modelo já definido
   const clientes = await Cliente.find();
   res.json(clientes);
 });
@@ -126,7 +154,7 @@ app.get('scr/User/cliente.html', (req, res) => {
   if (!token) {
       return res.status(401).send('Acesso negado. Faça login primeiro.');
   }
-  res.sendFile(path.join(__dirname, 'User', 'cliente.html'));
+  res.sendFile(path.join(__dirname, 'scr', 'User', 'cliente.html'));
 });
 
 

@@ -53,14 +53,14 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
   event.preventDefault();
 
   const email = document.getElementById('email').value;
-  const senha = document.getElementById('senha').value;
+  const password = document.getElementById('senha').value;
   const conteudo = document.getElementById('conteudo');
 
   try {
       const response = await fetch('/api/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, senha })
+          body: JSON.stringify({ email, password })
       });
 
       const data = await response.json();
@@ -127,6 +127,93 @@ document.addEventListener('DOMContentLoaded', () => {
       // carrega cliente.html etc.
     }
   });
+});
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const registerForm = document.getElementById('registerForm');
+  const registerButton = document.querySelector('.register');
+
+  if (!registerForm || !registerButton) return; // ignora se não estiver na página certa
+
+  registerButton.addEventListener('click', async (event) => {
+    event.preventDefault();
+
+    const first_name = document.getElementById('first_name')?.value;
+    const last_name  = document.getElementById('last_name')?.value;
+    const email      = document.getElementById('email')?.value;
+    const password   = document.getElementById('password')?.value;
+    const phone      = document.getElementById('phone')?.value;
+
+    if (!first_name || !last_name || !email || !password || !phone) {
+      alert('⚠️ Todos os campos são obrigatórios!');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ first_name, last_name, email, password, phone })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert(result.message);
+        window.location.href = '/index.html';
+      } else {
+        alert(result.error || 'Erro no cadastro');
+      }
+
+    } catch (error) {
+      console.error('Erro ao enviar dados:', error);
+      alert('Erro ao cadastrar usuário.');
+    }
+  });
+});
+
+
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const container = document.getElementById('profileContainer');
+  if (!container) return; // evita erro se não estiver na página de perfil
+
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('Faça login primeiro');
+    window.location.href = '/';
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/profile', {
+      headers: { 'x-auth-token': token }
+    });
+    if (!res.ok) throw await res.json();
+    const user = await res.json();
+
+    const fields = [
+      ['Tipo', user.user_id],
+      ['Nome', user.name?.first_name + ' ' + user.name?.last_name],
+      ['Email', user.email],
+      ['CPF', user.document_account?.cpf],
+      ['RG', user.document_account?.rg]
+    ];
+
+    container.innerHTML = '';
+    fields.forEach(([label, value]) => {
+      const p = document.createElement('p');
+      p.innerHTML = `<strong>${label}:</strong> ${value || '—'}`;
+      container.appendChild(p);
+    });
+
+  } catch (err) {
+    console.error('Erro ao carregar perfil:', err);
+    container.textContent = 'Não foi possível carregar o perfil.';
+  }
 });
 
 

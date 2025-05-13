@@ -70,34 +70,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ✨ Evento de login centralizado
     loginForm.addEventListener("submit", async function (event) {
-  event.preventDefault();
+      event.preventDefault();
 
       const email = document.getElementById("email").value;
       const password = document.getElementById("senha").value;
       const conteudo = document.getElementById("conteudo");
 
-  try {
+      try {
         const response = await fetch("/api/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
-      });
+        });
 
-      const data = await response.json();
+        const data = await response.json();
         console.log("🚀 resposta do login:", data);
-      if (response.ok) {
+        if (response.ok) {
           localStorage.setItem("token", data.token);
           replaceLoginButton();
 
           loadPage("profile");
-              closeLoginModal();
-  } else {
+          closeLoginModal();
+        } else {
           alert(data.error); // Exibe erro se login falhar
-      }
-  } catch (error) {
+        }
+      } catch (error) {
         console.error("🔥 Erro no login:", error);
-    }
-  });
+      }
+    });
 });
 
 
@@ -240,40 +240,93 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 function replaceLoginButton() {
-  const loginBtn = document.getElementById('loginBtn');
-  const logoutBtn = document.getElementById('logoutBtn');
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
     const userMenu = document.createElement("div");
 
-  if (!loginBtn) return;
+    if (!loginBtn) return;
 
     // Ícone de usuário
-  loginBtn.innerHTML = '<i class="fa fa-user-circle"></i>';
-  loginBtn.onclick = null;
-  // se quiser, redefina onclick ou adicione perfil:
-  loginBtn.addEventListener('click', () => {
-    // exibe menu de usuário ou perfil
+    loginBtn.innerHTML = '<i class="fa fa-user-circle"></i>';
+    loginBtn.style.position = "relative";
+    loginBtn.onclick = null;
+
+    // Criar menu suspenso
+    userMenu.id = "userMenu";
+    userMenu.style.position = "absolute";
+    userMenu.style.top = "35px"; // Ajuste a posição abaixo do botão
+    userMenu.style.right = "1px";
+    userMenu.style.width = "190px";
+    userMenu.style.backgroundColor = "#fff";
+    userMenu.style.border = "1px solid #ccc";
+    userMenu.style.padding = "10px";
+    userMenu.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
+    userMenu.innerHTML = `
+      <p><strong>Usuário: Admin</strong></p>
+      <ul>
+        <li><a href="../scr/User/profile.html" data-page="profile">Perfil</a></li>
+        <li><a href="#" data-page="emprestimos">Empréstimos</a></li>
+        <li><a href="#" data-page="preference">Preferências</a></li>
+        <li><a href="#" id="logoutLink">Sair</a><i class="fa fa-sign-out"></i></li>
+      </ul>
+    `;
+
+    // Adiciona o menu ao botão
+    loginBtn.appendChild(userMenu);
+
+    // Mostrar menu ao passar o mouse
+    loginBtn.addEventListener("mouseenter", () => {
+      userMenu.style.display = "block";
+    });
+
+    // Esconder menu ao sair do botão
+    loginBtn.addEventListener("mouseleave", () => {
+      userMenu.style.display = "none";
+    });
+
+    // Configurar evento de logout
+    document.getElementById("logoutLink").addEventListener("click", logout);
+
+    logoutBtn.style.display = "inline-block";
+    logoutBtn.onclick = logout;
+}
+
+function logout() { 
+  localStorage.removeItem('token');   
+  // 1) apaga o token 
+  window.location.href = '/'; 
+  // 2) redireciona pro login
+}
+
+
+
+
+
+
+function loadPageByAttribute(selector, attribute) {
+  document.querySelectorAll(selector).forEach(link => {
+    const conteudo = document.getElementById("conteudo");
+
+    link.onclick = function (e) {
+      e.preventDefault();
+      
+      const url = attribute === "href" ? link.href : link.getAttribute(attribute);
+
+      fetch(url)
+        .then(resp => resp.text())
+        .then(html => {
+          conteudo.innerHTML = html;
+          console.log(`✅ Página carregada: ${url}`);
+        })
+        .catch(err => console.error(`❌ Erro ao carregar ${url}:`, err));
+    };
   });
-
-  logoutBtn.style.display = 'inline-block';
-  logoutBtn.onclick     = logout;
 }
 
-function logout() {
-  localStorage.removeItem('token');   // 1) apaga o token
-  window.location.href = '/';         // 2) redireciona pro login
-}
-
-document.querySelectorAll("#link > a").forEach(link => {
-  const conteudo = document.getElementById('conteudo')
-  link.onclick = function(e) {
-    e.preventDefault();
-    fetch(link.href)
-      .then(resp => resp.text())
-      .then(html => {
-        conteudo.innerHTML = html;
-      })
-      .catch(err => console.error('Erro:', err));
-  }
+// 🔄 Inicializa AJAX para diferentes elementos
+document.addEventListener("DOMContentLoaded", () => {
+  loadPageByAttribute("[wm-nav]", "wm-nav"); // Carregar páginas pelo atributo wm-nav
+  loadPageByAttribute("#link > a", "href");  // Carregar páginas pelo atributo href
 });
 
 
@@ -625,12 +678,4 @@ function moveRight() {
 
 
   
-  document.querySelectorAll('[wm-nav]').forEach(link => {
-    const conteudo = document.getElementById('conteudo')
-    link.onclick = function (e) {
-      e.preventDefault()
-      fetch(link.getAttribute('wm-nav'))
-        .then(resp => resp.text())
-        .then(html => conteudo.innerHTML = html)
-    }
-  });
+ 

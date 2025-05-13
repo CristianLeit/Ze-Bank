@@ -268,12 +268,13 @@ nav {
   }
 }
 #loanCalculator{
-  margin: 5%;
+  margin: 25% 2% 2%;
+  float: right;
 }
 #addLoanForm{
-  height: 50%;
-  width: 47%;
-  float: right;
+  height: 80%;
+  
+  
   text-align: start;
 }
 
@@ -291,7 +292,7 @@ nav {
 
 /* Contêiner para gráfico e slider*/
 .chart-and-slider-container {
-  width: 45%;
+  width: 95%;
   margin: 2%;
   float:inline-start;
 }

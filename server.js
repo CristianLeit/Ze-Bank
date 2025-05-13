@@ -112,7 +112,7 @@ app.post('/api/login', async (req, res) => {
     }
 
     console.log('✅ Usuário encontrado:', user.name);
-
+  
     const senhaCorreta = await user.comparePassword(password);
     if (!senhaCorreta) {
       console.log('❌ Senha incorreta!');

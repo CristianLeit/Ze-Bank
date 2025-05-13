@@ -46,88 +46,61 @@ window.onclick = function(event) {
 
 
 
+document.addEventListener("DOMContentLoaded", () => {
+    const btnContato = document.getElementById("anchor");
+    const secContato = document.getElementById("contato");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const loginForm = document.getElementById("loginForm");
 
+    if (!loginForm) return; // Evita erro se loginForm não existir
 
+    // 🌐 Evento de rolagem suave para a seção de contato
+    btnContato.addEventListener("click", (e) => {
+      e.preventDefault();
+      secContato.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
 
-document.getElementById('loginForm').addEventListener('submit', async function(event) {
+    // 🔐 Verifica se o usuário já está logado
+    const token = localStorage.getItem("token");
+    if (token) {
+      replaceLoginButton();
+    } else {
+      logoutBtn.style.display = "none"; // Esconde botão de logout se não estiver logado
+    }
+
+    // ✨ Evento de login centralizado
+    loginForm.addEventListener("submit", async function (event) {
   event.preventDefault();
 
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('senha').value;
-  const conteudo = document.getElementById('conteudo');
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("senha").value;
+      const conteudo = document.getElementById("conteudo");
 
   try {
-      const response = await fetch('/api/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
+        const response = await fetch("/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
-
+        console.log("🚀 resposta do login:", data);
       if (response.ok) {
-          localStorage.setItem('token', data.token); 
+          localStorage.setItem("token", data.token);
+          replaceLoginButton();
 
-        // 1) Substitui o botão de login pelo ícone de usuário
-        const loginBtn = document.getElementById('loginBtn');
-        loginBtn.innerHTML = '<i class="fa fa-user-circle"></i>';
-        // Opcional: remover o handler de abrir modal
-        loginBtn.onclick = null;
-        // Opcional: adiciona um novo handler (ex.: abrir perfil)
-        loginBtn.addEventListener('click', () => {
-          // Aqui você abre o painel, por exemplo
-          openUserProfile();
-        });
-
-        // Redireciona via AJAX para carregar cliente.html
-        fetch('scr/User/cliente.html') // Faz a requisição da página dinamicamente
-          .then(resp => resp.text())
-          .then(html => {
-              conteudo.innerHTML = html; // Insere o conteúdo na div
-              console.log('Cliente carregado com sucesso!');
+          loadPage("profile");
               closeLoginModal();
-        })
-        .catch(err => console.error('Erro ao carregar cliente.html:', err));
   } else {
           alert(data.error); // Exibe erro se login falhar
       }
   } catch (error) {
-      console.error('Erro no login:', error);
-  }
-});
-
-
-document.addEventListener('DOMContentLoaded', () => {
-  const btnContato = document.getElementById('anchor');
-  const secContato = document.getElementById('contato');
-  const logoutBtn = document.getElementById('logoutBtn');
-
-  btnContato.addEventListener('click', e => {
-    e.preventDefault();
-    // rola de forma suave até o topo da seção de contato
-    secContato.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
-
-  // 1) Checa se já está logado
-  const token = localStorage.getItem('token');
-  if (token) {
-    replaceLoginButton();
-  } else {
-    // garante que logout fica oculto se não estiver logado
-    logoutBtn.style.display = 'none';
-  }
-
-  // 2) Configura o listener de login como antes
-  document.getElementById('loginForm').addEventListener('submit', async function(event) {
-    event.preventDefault();
-    // ... seu código de login ...
-    if (response.ok) {
-      localStorage.setItem('token', data.token);
-      replaceLoginButton();
-      // carrega cliente.html etc.
+        console.error("🔥 Erro no login:", error);
     }
   });
 });
+
+
 
 
 
@@ -175,46 +148,59 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+const token = localStorage.getItem('token'); // ou de onde você armazenar
+fetch('http://localhost:3000/api/profile', {
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+    'x-auth-token': token
+  }
+})
+  .then(res => res.json())
+  .then(data => console.log(data))
+  .catch(err => console.error(err));
 
+document.addEventListener("DOMContentLoaded", async () => {
+  const container = document.getElementById("profileContainer");
+  if (!container) return; // Evita erro caso a página não tenha carregado corretamente
 
-document.addEventListener('DOMContentLoaded', async () => {
-  const container = document.getElementById('profileContainer');
-  if (!container) return; // evita erro se não estiver na página de perfil
-
-  const token = localStorage.getItem('token');
+ 
   if (!token) {
-    alert('Faça login primeiro');
-    window.location.href = '/';
+    alert("⚠️ Faça login primeiro.");
+    window.location.href = "/";
     return;
   }
 
   try {
-    const res = await fetch('/api/profile', {
-      headers: { 'x-auth-token': token }
+    const res = await fetch("http://localhost:3000/api/profile", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": token
+      }
     });
-    if (!res.ok) throw await res.json();
+
     const user = await res.json();
+    console.log("✅ Dados do perfil recebidos:", user); // 🔥 Verifica se os dados aparecem aqui
 
-    const fields = [
-      ['Tipo', user.user_id],
-      ['Nome', user.name?.first_name + ' ' + user.name?.last_name],
-      ['Email', user.email],
-      ['CPF', user.document_account?.cpf],
-      ['RG', user.document_account?.rg]
-    ];
-
-    container.innerHTML = '';
-    fields.forEach(([label, value]) => {
-      const p = document.createElement('p');
-      p.innerHTML = `<strong>${label}:</strong> ${value || '—'}`;
-      container.appendChild(p);
-    });
+    // Insere os dados no HTML
+    container.innerHTML = `
+      <p><strong>Nome:</strong> ${user.name || "—"}</p>
+      <p><strong>Email:</strong> ${user.email || "—"}</p>
+      <p><strong>CPF:</strong> ${user.cpf || "—"}</p>
+      <p><strong>Telefone:</strong> ${user.phone || "—"}</p>
+      <p><strong>Data de Nascimento:</strong> ${user.date_of_birth ? new Date(user.date_of_birth).toLocaleDateString() : "—"}</p>
+    `;
 
   } catch (err) {
-    console.error('Erro ao carregar perfil:', err);
-    container.textContent = 'Não foi possível carregar o perfil.';
+    console.error("❌ Erro ao carregar perfil:", err);
+    container.innerHTML = `<p style="color: red;">⚠️ Não foi possível carregar o perfil.</p>`;
   }
 });
+
+
+
+
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -251,11 +237,15 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+
 function replaceLoginButton() {
   const loginBtn = document.getElementById('loginBtn');
   const logoutBtn = document.getElementById('logoutBtn');
+    const userMenu = document.createElement("div");
 
   if (!loginBtn) return;
+
+    // Ícone de usuário
   loginBtn.innerHTML = '<i class="fa fa-user-circle"></i>';
   loginBtn.onclick = null;
   // se quiser, redefina onclick ou adicione perfil:

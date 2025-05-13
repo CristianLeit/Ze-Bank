@@ -81,7 +81,14 @@ app.post('/api/register', async (req, res) => {
 
 
 
-
+app.post('/api/refresh-token', authMiddleware, (req, res) => {
+  try {
+    const novoToken = jwt.sign({ id: req.user.id, email: req.user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.json({ token: novoToken });
+  } catch (err) {
+    res.status(500).json({ error: 'Erro ao renovar token' });
+  }
+});
 
 
 
@@ -118,6 +125,8 @@ app.post('/api/login', async (req, res) => {
       { expiresIn: '1h' }
     );
       res.json({ token });
+      console.log("🔍 Token gerado:", token);
+
 
   } catch (error) {
     console.error('🔥 Erro no login:', error);
@@ -125,14 +134,18 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+
 app.get('/api/profile', authMiddleware, async (req, res) => {
+  console.log("🔍 Token recebido na rota profile:", req.header("x-auth-token"));
   try {
+    console.log("✅ Middleware autenticado. Dados do usuário:", req.user); 
     // req.user.id foi setado pelo authMiddleware via JWT
-    const usuario = await Usuario.findById(req.usuario.id).select('-senha -__v');
+    const usuario = await Usuario.findById(req.user.id).select('-senha -__v');
+    
     if (!usuario) return res.status(404).json({ error: 'Usuário não encontrado' });
     res.json(usuario);
   } catch (err) {
-    console.error(err);
+    console.error('🔥 Erro interno ao obter perfil:', err);
     res.status(500).json({ error: 'Erro interno ao obter perfil' });
   }
 });

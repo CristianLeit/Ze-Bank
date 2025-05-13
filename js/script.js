@@ -114,13 +114,14 @@ document.addEventListener('DOMContentLoaded', () => {
   registerButton.addEventListener('click', async (event) => {
     event.preventDefault();
 
-    const first_name = document.getElementById('first_name')?.value;
-    const last_name  = document.getElementById('last_name')?.value;
+    const name = document.getElementById('name')?.value;
+    const cpf = document.getElementById('cpf')?.value;
+    const date_of_birth = document.getElementById('date_of_birth')?.value;
     const email      = document.getElementById('email')?.value;
     const password   = document.getElementById('password')?.value;
     const phone      = document.getElementById('phone')?.value;
 
-    if (!first_name || !last_name || !email || !password || !phone) {
+    if (!name || !cpf || !date_of_birth|| !email || !password || !phone) {
       alert('⚠️ Todos os campos são obrigatórios!');
       return;
     }
@@ -129,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ first_name, last_name, email, password, phone })
+        body: JSON.stringify({ name, cpf, date_of_birth, email, password, phone })
       });
 
       const result = await response.json();

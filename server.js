@@ -45,7 +45,7 @@ app.get('/api/news', async (req, res) => {
 // Rota de cadastro de usuário
 app.post('/api/register', async (req, res) => {
   try {
-    const { first_name, last_name, email, password, phone } = req.body;
+    const { name, cpf, date_of_birth ,email, password, phone } = req.body;
 
     // Verifica se o email já existe
     const usuarioExistente = await Usuario.findOne({ email });
@@ -59,7 +59,9 @@ app.post('/api/register', async (req, res) => {
 
     // Cria novo usuário
     const novoUsuario = new Usuario({
-      name: { first_name, last_name },
+      name,
+      cpf,
+      date_of_birth,
       email,
       password: hashedPassword,
       phone,
@@ -110,7 +112,6 @@ app.post('/api/login', async (req, res) => {
     }
 
     console.log('✅ Usuário encontrado:', user.name);
-    console.log('🪪Tipo:', user.role); // Agora essa linha está no lugar certo
 
     const senhaCorreta = await user.comparePassword(password);
     if (!senhaCorreta) {
@@ -120,7 +121,7 @@ app.post('/api/login', async (req, res) => {
 
     console.log('🔑 Login bem-sucedido! Gerando token...');
     const token = jwt.sign(
-      { id: user._id, role: user.role, email: user.email },
+      { id: user._id, email: user.email },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );

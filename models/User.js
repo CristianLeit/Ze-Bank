@@ -4,10 +4,7 @@ const SALT_WORK_FACTOR = 10;
 
 const UserSchema = new mongoose.Schema({
   user_id: {type: String, unique: true },         // Unique identifier for the user
-  name: {
-    first_name: String,
-    last_name: String
-  },
+  name: String,
   email:{type: String, require: true, unique: true },            
   password: {type: String, require: true},                                // Encrypted password
   phone: {type: Number, unique: true },            

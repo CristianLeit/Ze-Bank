@@ -1,0 +1,35 @@
+<section id="conteudo">
+<!-- Contêiner para gráfico e informações -->
+        <div class="chart-and-slider-container">
+            
+            
+              <table>
+                <tbody id="clientsTable"></tbody>
+              </table>
+              
+              
+              <table>
+                <tbody id="loansTable"></tbody>
+              </table>
+            <!-- Área de Informações de Mercado e Seletor -->
+            <div class="text-info">
+            <div id="stock-info"></div>
+            <div id="stock-valor"></div>
+            </div>
+            
+            <!-- Área do gráfico -->
+            <div class="chart-container">
+            <canvas id="lineChart"></canvas>
+            </div>
+
+            <div class="range-selector">
+                <label for="rangeSelect">Faixa:</label>
+                <select id="rangeSelect" onchange="onRangeChange()">
+                <option value="1d">1d</option>
+                <option value="5d">5d</option>
+                <option value="1mo" selected>1mo</option>
+                <option value="3mo">3mo</option>
+                </select>
+            </div>
+        </div>
+</section>

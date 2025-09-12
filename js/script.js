@@ -32,8 +32,14 @@ function openLoginModal() {
 }
 
 function closeLoginModal() {
+  console.log("🔒 Fechando modal de login...");
+
     document.getElementById("loginModal").style.display = "none";
+    document.getElementById("loginModal").classList.add("hidden");
 }
+
+
+
 
 // Fecha o modal ao clicar fora da caixa de login
 window.onclick = function(event) {
@@ -89,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
           localStorage.setItem("token", data.token);
           replaceLoginButton();
 
-          loadPage("profile");
+          loadPage();
           closeLoginModal();
         } else {
           alert(data.error); // Exibe erro se login falhar
@@ -99,6 +105,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 });
+
+function loadPage() {
+  window.location.href = `/index.html`;
+}
 
 
 

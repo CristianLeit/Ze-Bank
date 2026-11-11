@@ -1,5 +1,4 @@
 require('dotenv').config();
-console.log('JWT_SECRET:', process.env.JWT_SECRET);
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
@@ -171,6 +170,34 @@ app.get('scr/User/cliente.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'scr', 'User', 'cliente.html'));
 });
 
+
+// Proxy para lista de ações (ticker) — esconde o token da brapi no back-end
+app.get('/api/stocks/list', async (req, res) => {
+  try {
+    const BRAPI_TOKEN = process.env.BRAPI_TOKEN;
+    const url = `https://brapi.dev/api/quote/list?sortBy=market_cap_basic&sortOrder=desc&limit=50&token=${BRAPI_TOKEN}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: 'Erro ao buscar lista de ações' });
+  }
+});
+
+// Proxy para dados de uma ação específica — esconde o token da brapi no back-end
+app.get('/api/stock/:symbol', async (req, res) => {
+  try {
+    const { symbol } = req.params;
+    const { range = '3mo' } = req.query;
+    const BRAPI_TOKEN = process.env.BRAPI_TOKEN;
+    const url = `https://brapi.dev/api/quote/${symbol}?range=${range}&interval=1d&fundamental=true&modules=summaryProfile&token=${BRAPI_TOKEN}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: 'Erro ao buscar dados da ação' });
+  }
+});
 
 // Middleware para rotas não encontradas
 app.use((req, res) => {

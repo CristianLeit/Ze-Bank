@@ -424,7 +424,7 @@ function calculateMonthsDifference(start, end) {
 
 
 
-fetch("https://brapi.dev/api/quote/list?sortBy=market_cap_basic&sortOrder=desc&limit=50&token=eJGEyu8vVHctULdVdHYzQd")
+fetch("/api/stocks/list")
   .then(response => response.json())
   .then(data => {
     const stocks = data.stocks.slice(0, 50); // Pegamos apenas 50 ações para exibição
@@ -463,9 +463,8 @@ fetch("https://brapi.dev/api/quote/list?sortBy=market_cap_basic&sortOrder=desc&l
 
   // Função para carregar os dados de ações de acordo com o range escolhido (padrão: "3mo") para o símbolo desejado (padrão: "BOVA11")
 function loadStockData(range = "3mo", symbol = "BOVA11") {
-    const token = "3P4iaVo32aM97jgbqNDVyu";
-    const url = `https://brapi.dev/api/quote/${symbol}?range=${range}&interval=1d&fundamental=true&modules=summaryProfile&token=${token}`;
-  
+    const url = `/api/stock/${symbol}?range=${range}`;
+
     fetch(url)
       .then(response => response.json())
       .then(data => {

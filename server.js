@@ -52,17 +52,13 @@ app.post('/api/register', async (req, res) => {
       return res.status(400).json({ error: 'Email já cadastrado!' });
     }
 
-    // Gera hash para a senha
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    // Cria novo usuário
+    // Cria novo usuário (o hook pre('save') do model faz o hash da senha)
     const novoUsuario = new Usuario({
       name,
       cpf,
       date_of_birth,
       email,
-      password: hashedPassword,
+      password,
       phone,
       created_at: new Date(),
       updated_at: new Date()

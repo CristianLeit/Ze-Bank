@@ -159,23 +159,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-const token = localStorage.getItem('token'); // ou de onde você armazenar
-fetch('http://localhost:3000/api/profile', {
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json',
-    'x-auth-token': token
-  }
-})
-  .then(res => res.json())
-  .then(data => console.log(data))
-  .catch(err => console.error(err));
-
 document.addEventListener("DOMContentLoaded", async () => {
   const container = document.getElementById("profileContainer");
-  if (!container) return; // Evita erro caso a página não tenha carregado corretamente
+  if (!container) return; // Evita erro caso a página não tenha profileContainer
 
- 
+  const token = localStorage.getItem('token');
+
   if (!token) {
     alert("⚠️ Faça login primeiro.");
     window.location.href = "/";
@@ -183,7 +172,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    const res = await fetch("http://localhost:3000/api/profile", {
+    const res = await fetch("/api/profile", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -191,8 +180,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
 
+    if (!res.ok) {
+      if (res.status === 401 || res.status === 400) {
+        localStorage.removeItem('token');
+        alert("⚠️ Sessão expirada. Faça login novamente.");
+        window.location.href = "/";
+        return;
+      }
+      throw new Error(`Erro ${res.status}: ${res.statusText}`);
+    }
+
     const user = await res.json();
-    console.log("✅ Dados do perfil recebidos:", user); // 🔥 Verifica se os dados aparecem aqui
 
     // Insere os dados no HTML
     container.innerHTML = `

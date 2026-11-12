@@ -15,6 +15,12 @@
     "dev": "node --watch server.js",
     "test": "jest"
   },
+  "jest": {
+    "testEnvironment": "node",
+    "globalSetup": "./tests/jest.globalSetup.js",
+    "globalTeardown": "./tests/jest.globalTeardown.js",
+    "testMatch": ["<rootDir>/tests/**/*.test.js"]
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

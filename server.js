@@ -2,36 +2,11 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-const jwt = require('jsonwebtoken');
 const authMiddleware = require('./middleware/auth');
-const Usuario = require('./models/User')
-const bcrypt = require('bcryptjs');
 
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-
-// Valida CPF: formato 000.000.000-00 e dígitos verificadores
-function validarCPF(cpf) {
-  if (!cpf) return false;
-  const numeros = String(cpf).replace(/\D/g, '');
-  if (numeros.length !== 11) return false;
-  if (/^(\d)\1{10}$/.test(numeros)) return false; // rejeita todos os dígitos iguais
-
-  const calcularDigito = (base) => {
-    let soma = 0;
-    for (let i = 0; i < base.length; i++) {
-      soma += parseInt(base[i]) * (base.length + 1 - i);
-    }
-    const resto = (soma * 10) % 11;
-    return resto === 10 ? 0 : resto;
-  };
-
-  const d1 = calcularDigito(numeros.slice(0, 9));
-  const d2 = calcularDigito(numeros.slice(0, 10));
-  return d1 === parseInt(numeros[9]) && d2 === parseInt(numeros[10]);
-}
 
 
 // Conexão com o MongoDB
@@ -43,6 +18,10 @@ mongoose
 // Middlewares
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
+
+
+// Rotas de autenticação (camadas: routes -> controller -> service)
+app.use('/api', require('./routes/auth'));
 
 
 // Proxy para ocultar o token e buscar notícias
@@ -62,118 +41,7 @@ app.get('/api/news', async (req, res) => {
 });
 
 
-
-// Rota de cadastro de usuário
-app.post('/api/register', async (req, res) => {
-  try {
-    const { name, cpf, date_of_birth ,email, password, phone } = req.body;
-
-    // Validação de CPF
-    if (!validarCPF(cpf)) {
-      return res.status(400).json({ error: 'CPF inválido!' });
-    }
-
-    // Verifica se o email já existe
-    const usuarioExistente = await Usuario.findOne({ email });
-    if (usuarioExistente) {
-      return res.status(400).json({ error: 'Email já cadastrado!' });
-    }
-
-    // Cria novo usuário (o hook pre('save') do model faz o hash da senha)
-    const novoUsuario = new Usuario({
-      name,
-      cpf,
-      date_of_birth,
-      email,
-      password,
-      phone,
-      created_at: new Date(),
-      updated_at: new Date()
-    });
-
-    // Salva no banco
-    await novoUsuario.save();
-
-    res.status(201).json({ message: 'Usuário cadastrado com sucesso!' });
-
-  } catch (error) {
-    console.error('Erro ao registrar usuário:', error);
-    res.status(500).json({ error: 'Erro interno do servidor' });
-  }
-});
-
-
-
-
-app.post('/api/refresh-token', authMiddleware, (req, res) => {
-  try {
-    const novoToken = jwt.sign({ id: req.user.id, email: req.user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.json({ token: novoToken });
-  } catch (err) {
-    res.status(500).json({ error: 'Erro ao renovar token' });
-  }
-});
-
-
-
-
-// Rota de login (autenticação)
-app.post('/api/login', async (req, res) => {
-  const { email, password } = req.body;
-  
-  console.log('Email recebido:', email);
-  console.log('Senha recebida:', password);
-
-  try {
-    // Busca o usuário pelo email
-    const user = await Usuario.findOne({ email });
-
-    if (!user) {
-      console.log('❌ Usuário não encontrado no banco');
-      return res.status(400).json({ error: 'Usuário não encontrado' });
-    }
-
-    console.log('✅ Usuário encontrado:', user.name);
-  
-    const senhaCorreta = await user.comparePassword(password);
-    if (!senhaCorreta) {
-      console.log('❌ Senha incorreta!');
-      return res.status(400).json({ error: 'Senha inválida' });
-    }
-
-    console.log('🔑 Login bem-sucedido! Gerando token...');
-    const token = jwt.sign(
-      { id: user._id, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-      res.json({ token });
-      console.log("🔍 Token gerado:", token);
-
-
-  } catch (error) {
-    console.error('🔥 Erro no login:', error);
-    res.status(500).json({ error: 'Erro interno do servidor' });
-  }
-});
-
-
-app.get('/api/profile', authMiddleware, async (req, res) => {
-  console.log("🔍 Token recebido na rota profile:", req.header("x-auth-token"));
-  try {
-    console.log("✅ Middleware autenticado. Dados do usuário:", req.user); 
-    // req.user.id foi setado pelo authMiddleware via JWT
-    const usuario = await Usuario.findById(req.user.id).select('-senha -__v');
-    
-    if (!usuario) return res.status(404).json({ error: 'Usuário não encontrado' });
-    res.json(usuario);
-  } catch (err) {
-    console.error('🔥 Erro interno ao obter perfil:', err);
-    res.status(500).json({ error: 'Erro interno ao obter perfil' });
-  }
-});
-
-// Exemplo de rota protegida para manipular clientes
+// Rota protegida para manipular clientes
 app.get('/api/clientes', authMiddleware, async (req, res) => {
   const Cliente = mongoose.model('clientes'); // supondo modelo já definido
   const clientes = await Cliente.find();
@@ -186,7 +54,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('scr/User/cliente.html', (req, res) => {
-  const token = req.headers['x-auth-token']; 
+  const token = req.headers['x-auth-token'];
   if (!token) {
       return res.status(401).send('Acesso negado. Faça login primeiro.');
   }
@@ -236,5 +104,3 @@ if (process.env.NODE_ENV !== 'test') {
 
 
 module.exports = app;
-
-

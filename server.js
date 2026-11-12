@@ -23,6 +23,9 @@ app.use(express.static(path.join(__dirname)));
 // Rotas de autenticação (camadas: routes -> controller -> service)
 app.use('/api', require('./routes/auth'));
 
+// Webhook do assistente (Asyntia) — respostas específicas do Zé Bank
+app.use('/api/assistente', require('./routes/assistente'));
+
 
 // Proxy para ocultar o token e buscar notícias
 app.get('/api/news', async (req, res) => {

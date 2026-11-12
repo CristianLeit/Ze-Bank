@@ -1,0 +1,3 @@
+[submodule "src/assistente"]
+	path = src/assistente
+	url = https://github.com/CristianLeit/Asyntia
